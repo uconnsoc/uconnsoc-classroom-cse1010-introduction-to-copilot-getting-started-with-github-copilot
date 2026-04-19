@@ -7,11 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities");
+      const response = await fetch("/activities", { cache: 'no-cache' });
       const activities = await response.json();
 
       // Clear loading message
       activitiesList.innerHTML = "";
+
+      // Clear select options except the default
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -47,7 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const activity = e.target.dataset.activity;
           try {
             const response = await fetch(`/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`, {
-              method: 'DELETE'
+              method: 'DELETE',
+              cache: 'no-cache'
             });
             if (response.ok) {
               fetchActivities(); // Refresh activities
